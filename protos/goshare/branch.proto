@@ -6,7 +6,7 @@ option go_package = "github.com/mineralres/protos/src/go/goshare";
 
 // 单纯树形结构体
 message BranchTreeNode {
-  string id = 1;
+  string   id                      = 1;
   repeated BranchTreeNode children = 2;
 }
 

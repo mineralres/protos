@@ -2,8 +2,8 @@ syntax = "proto3";
 package goshare;
 
 import "goshare/common.proto";
-option go_package = "github.com/mineralres/protos/src/go/goshare";
 
+option go_package = "github.com/mineralres/protos/src/go/goshare";
 
 message OrderBook {
   double ask        = 1; /// 卖价
@@ -82,15 +82,15 @@ message OptionTQuoteItemList {
 
 // K线
 message Kline {
-  int64  time        = 1; // 时间
-  double open        = 2; // 开盘
-  double high        = 3; // 最高
-  double low         = 4; // 最低
-  double close       = 5; // 收盘
-  int32  volume      = 6; // 成交量
-  double amount      = 7; // 成交额
-  int32  position    = 8; // 持仓量
-  int32  trading_day = 9; // 交易日
+  int64  time             = 1;  // 时间
+  double open             = 2;  // 开盘
+  double high             = 3;  // 最高
+  double low              = 4;  // 最低
+  double close            = 5;  // 收盘
+  int32  volume           = 6;  // 成交量
+  double amount           = 7;  // 成交额
+  int32  position         = 8;  // 持仓量
+  int32  trading_day      = 9;  // 交易日
 }
 
 // KlineSeries K线序列
@@ -137,4 +137,15 @@ message SimpleTickSeries {
   string   symbol          = 2;
   int32    trading_day     = 3;
   repeated SimpleTick list = 4;
+}
+
+// 期货市场统计数据
+message CtpFutureOverview {
+  message RankItem {
+    string exchange = 1;
+    string symbol   = 2;
+    double yield    = 3;
+  }
+  repeated RankItem yield_rank      = 1;
+  repeated RankItem volatility_rank = 2;
 }

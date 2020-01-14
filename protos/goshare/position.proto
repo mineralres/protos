@@ -1,9 +1,9 @@
 syntax = "proto3";
 package goshare;
 
+import "goshare/order.proto";
+
 option go_package = "github.com/mineralres/protos/src/go/goshare";
-
-
 
 enum PositionSummationType {
   TOTAL     = 0;
@@ -14,7 +14,7 @@ enum PositionSummationType {
 // 持仓统计
 message PositionSummation {
   // 方向
-  int32 direction = 1;
+  DirectionType direction = 1;
   // 类型
   int32 type = 2;
   // 持仓
@@ -41,7 +41,7 @@ message Position {
   string            exchange               = 4;  // 交易所
   string            symbol                 = 5;  /// 合约编号
   string            product                = 6;  // 品种
-  int32             direction              = 7;  // 方向
+  DirectionType     direction              = 7;  // 方向
   PositionSummation total                  = 8;  // 统计
   PositionSummation today                  = 9;  // 今仓
   PositionSummation yesterday              = 10; // 今仓
@@ -57,4 +57,126 @@ message Position {
   string            branch                 = 20; // 部门
   string            branch_name            = 21; // 部门名称
   bool              is_close_today_allowed = 22; // 是否允许平今
+}
+
+message SymbolPositionSummation {
+  PositionSummation total     = 1; // 统计
+  PositionSummation today     = 2; // 今仓
+  PositionSummation yesterday = 3; // 今仓
+}
+
+// 合约多空持仓
+message SymbolPosition {
+  string exchange               = 1;  // 交易所
+  string symbol                 = 2;  /// 合约编号
+  string product                = 3;  // 品种
+  int32  direction              = 4;  // 方向
+  double pre_settlement_price   = 5;  // 昨结算
+  double settlement_price       = 6;  // 今结算
+  double last_price             = 7;  // 最新价
+  int32  trading_day            = 8;  // 交易日
+  int32  product_type           = 9;  // 交易品种类型
+  int32  multiple               = 10; // 合约乘数
+  double price_tick             = 11; // 最小变动价位
+  string symbol_name            = 12; // 名称
+  string user_name              = 13; // 账号名
+  SymbolPositionSummation long  = 14; // 多头
+  SymbolPositionSummation short = 15; // 空头
+}
+
+// 持仓明细
+message PositionDetail {
+  string        bu_id                  = 1;  // 单元
+  string        exchange               = 2;  // 交易所
+  string        symbol                 = 3;  // 合约
+  string        product                = 4;  // 品种
+  DirectionType direction              = 5;  // 方向
+  int32         volume                 = 6;  // 数量
+  double        price                  = 7;  // 开仓金额
+  int32         closed_volume          = 8;  // 平仓数量
+  double        closed_amount          = 9;  // 平仓金额
+  int64         open_time              = 10; // 开仓时间
+  int32         open_trading_day       = 11; // 开仓交易日
+  double        float_profit           = 12; // 持仓盈亏
+  int32         front_id               = 13; // 委托front
+  int32         session_id             = 14; // session
+  string        order_ref              = 15; // order ref
+  string        trade_id               = 16; // 开仓成交编号
+  int32         trade_type             = 17; // 开仓成交类型
+  double        closed_profit          = 18; // 平仓盈亏
+  double        pre_settlement_price   = 19; // 昨结
+  double        initial_open_amount    = 20; // 初始开仓金额
+  int32         multiple               = 21; // 合约乘数
+  int32         last_settle_date       = 22; // 结算交易日
+  double        last_settlement_price  = 23; // 结算价
+  double        last_settlement_profit = 24; // 结算盈亏
+  double        price_tick             = 25; // 变动点
+  double        last_price             = 26; // 最新价
+  string        user_name              = 27; // 用户名
+  int32         trading_day            = 28; // 当前交易日
+  int32         expire_date            = 29; // 到期日
+  double        margin                 = 30; // 保证金占用
+}
+
+// 持仓明细
+message PositionDetailList {
+  repeated PositionDetail list        = 1;
+  int32                   multiple    = 2;
+  double                  price_tick  = 3;
+  int32                   trading_day = 4;
+}
+
+// 持仓明细
+message CloseTradeMatch {
+  string        user_id                = 1;  // 帐号
+  string        ta_id                  = 2;  // taid
+  string        bu_id                  = 3;  // 单元
+  string        exchange               = 4;  // 交易所
+  string        symbol                 = 5;  // 合约
+  string        product                = 6;  // 品种
+  DirectionType direction              = 7;  // 方向
+  int32         open_volume            = 8;  // 数量
+  double        open_amount            = 9;  // 开仓金额
+  int32         closed_volume          = 10; // 平仓数量
+  double        closed_amount          = 11; // 平仓金额
+  int64         open_time              = 12; // 开仓时间
+  int64         close_time             = 13; // 平仓时间
+  int32         open_trading_day       = 14; // 开仓交易日
+  int32         close_trading_day      = 15; // 平仓交易日
+  double        float_profit           = 16; // 持仓盈亏
+  string        open_trade_id          = 17; // 开仓成交编号
+  string        close_trade_id         = 18; // 平仓成交编号
+  int32         open_trade_type        = 19; // 开仓成交类型
+  int32         close_trade_type       = 20; // 平仓成交类型
+  int32         open_order_hedge_type  = 21; // 开仓投机套保类型
+  int32         close_order_hedge_type = 22; // 平仓投机套保类型
+  double        closed_profit          = 23; // 平仓盈亏
+  double        pre_settlement_price   = 24; // 昨结
+  double        initial_open_amount    = 27; // 初始开仓金额
+  int32         multiple               = 28; // 合约乘数
+  int32         last_settle_date       = 30; // 结算交易日
+  double        last_settlement_price  = 31; // 结算价
+  double        last_settlement_profit = 32; // 结算盈亏
+  double        price_tick             = 33; // 变动点
+  string        symbol_name            = 34; // 合约名称
+  double        last_price             = 35; // 最新价
+  string        user_name              = 36; // 用户名
+  int32         trading_day            = 37; // 当前交易日
+  int32         expire_date            = 38; // 到期日
+  string        branch                 = 39; // 部门
+  string        branch_name            = 40; // 部门名称
+  double        margin                 = 41; // 保证金占用
+  double        market_value           = 42; // 市值
+  string        close_comment          = 43; // 平仓备注
+  int32         open_order_session_id  = 44; // 开仓session
+  int32         close_order_session_id = 45; // 平仓session
+  string        open_order_ref         = 46; // 开仓ref
+  string        close_order_ref        = 47; // 平仓ref
+}
+
+message CloseTradeMatchList {
+  repeated CloseTradeMatch list        = 1;
+  int32                    multiple    = 2;
+  double                   price_tick  = 3;
+  int32                    trading_day = 4;
 }

@@ -1,8 +1,8 @@
 syntax = "proto3";
 package goshare;
 
+import "goshare/order.proto";
 option go_package = "github.com/mineralres/protos/src/go/goshare";
-
 
 // 成交类型
 enum TradeType {
@@ -28,27 +28,27 @@ enum TradeType {
 
 // 成交
 message Trade {
-  string exchange           = 1;
-  string symbol             = 2;
-  string product            = 3;
-  int32  direction          = 5;
-  int32  offset             = 6;
-  double price              = 7;
-  int32  volume             = 8;
-  string user_id            = 9;
-  string ta_id              = 10;
-  string bu_id              = 11;
-  string trade_id           = 12;
-  int64  traded_time        = 13;
-  int32  traded_trading_day = 14;
-  int32  front_id           = 15;
-  int32  session_id         = 16;
-  string order_ref          = 17;
-  string user_name          = 18;
-  string branch             = 19;
-  string branch_name        = 20;
-  int32  trade_type         = 21;
-  string exchange_order_id  = 22;
+  string        exchange           = 1;
+  string        symbol             = 2;
+  string        product            = 3;
+  DirectionType direction          = 5;
+  int32         offset             = 6;
+  double        price              = 7;
+  int32         volume             = 8;
+  string        user_id            = 9;
+  string        ta_id              = 10;
+  string        bu_id              = 11;
+  string        trade_id           = 12;
+  int64         traded_time        = 13;
+  int32         traded_trading_day = 14;
+  int32         front_id           = 15;
+  int32         session_id         = 16;
+  string        order_ref          = 17;
+  string        user_name          = 18;
+  string        branch             = 19;
+  string        branch_name        = 20;
+  int32         trade_type         = 21;
+  string        exchange_order_id  = 22;
 }
 
 message TradeList { repeated Trade list = 1; }

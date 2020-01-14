@@ -51,7 +51,7 @@ func (PositionSummationType) EnumDescriptor() ([]byte, []int) {
 // 持仓统计
 type PositionSummation struct {
 	// 方向
-	Direction int32 `protobuf:"varint,1,opt,name=direction,proto3" json:"direction"`
+	Direction DirectionType `protobuf:"varint,1,opt,name=direction,proto3,enum=goshare.DirectionType" json:"direction"`
 	// 类型
 	Type int32 `protobuf:"varint,2,opt,name=type,proto3" json:"type"`
 	// 持仓
@@ -98,11 +98,11 @@ func (m *PositionSummation) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_PositionSummation proto.InternalMessageInfo
 
-func (m *PositionSummation) GetDirection() int32 {
+func (m *PositionSummation) GetDirection() DirectionType {
 	if m != nil {
 		return m.Direction
 	}
-	return 0
+	return DirectionType_LONG
 }
 
 func (m *PositionSummation) GetType() int32 {
@@ -169,7 +169,7 @@ type Position struct {
 	Exchange             string             `protobuf:"bytes,4,opt,name=exchange,proto3" json:"exchange"`
 	Symbol               string             `protobuf:"bytes,5,opt,name=symbol,proto3" json:"symbol"`
 	Product              string             `protobuf:"bytes,6,opt,name=product,proto3" json:"product"`
-	Direction            int32              `protobuf:"varint,7,opt,name=direction,proto3" json:"direction"`
+	Direction            DirectionType      `protobuf:"varint,7,opt,name=direction,proto3,enum=goshare.DirectionType" json:"direction"`
 	Total                *PositionSummation `protobuf:"bytes,8,opt,name=total,proto3" json:"total"`
 	Today                *PositionSummation `protobuf:"bytes,9,opt,name=today,proto3" json:"today"`
 	Yesterday            *PositionSummation `protobuf:"bytes,10,opt,name=yesterday,proto3" json:"yesterday"`
@@ -257,11 +257,11 @@ func (m *Position) GetProduct() string {
 	return ""
 }
 
-func (m *Position) GetDirection() int32 {
+func (m *Position) GetDirection() DirectionType {
 	if m != nil {
 		return m.Direction
 	}
-	return 0
+	return DirectionType_LONG
 }
 
 func (m *Position) GetTotal() *PositionSummation {
@@ -369,53 +369,1104 @@ func (m *Position) GetIsCloseTodayAllowed() bool {
 	return false
 }
 
+type SymbolPositionSummation struct {
+	Total                *PositionSummation `protobuf:"bytes,1,opt,name=total,proto3" json:"total"`
+	Today                *PositionSummation `protobuf:"bytes,2,opt,name=today,proto3" json:"today"`
+	Yesterday            *PositionSummation `protobuf:"bytes,3,opt,name=yesterday,proto3" json:"yesterday"`
+	XXX_NoUnkeyedLiteral struct{}           `json:"-"`
+	XXX_unrecognized     []byte             `json:"-"`
+	XXX_sizecache        int32              `json:"-"`
+}
+
+func (m *SymbolPositionSummation) Reset()         { *m = SymbolPositionSummation{} }
+func (m *SymbolPositionSummation) String() string { return proto.CompactTextString(m) }
+func (*SymbolPositionSummation) ProtoMessage()    {}
+func (*SymbolPositionSummation) Descriptor() ([]byte, []int) {
+	return fileDescriptor_0f94fc40d6c0c65e, []int{2}
+}
+
+func (m *SymbolPositionSummation) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_SymbolPositionSummation.Unmarshal(m, b)
+}
+func (m *SymbolPositionSummation) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_SymbolPositionSummation.Marshal(b, m, deterministic)
+}
+func (m *SymbolPositionSummation) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_SymbolPositionSummation.Merge(m, src)
+}
+func (m *SymbolPositionSummation) XXX_Size() int {
+	return xxx_messageInfo_SymbolPositionSummation.Size(m)
+}
+func (m *SymbolPositionSummation) XXX_DiscardUnknown() {
+	xxx_messageInfo_SymbolPositionSummation.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_SymbolPositionSummation proto.InternalMessageInfo
+
+func (m *SymbolPositionSummation) GetTotal() *PositionSummation {
+	if m != nil {
+		return m.Total
+	}
+	return nil
+}
+
+func (m *SymbolPositionSummation) GetToday() *PositionSummation {
+	if m != nil {
+		return m.Today
+	}
+	return nil
+}
+
+func (m *SymbolPositionSummation) GetYesterday() *PositionSummation {
+	if m != nil {
+		return m.Yesterday
+	}
+	return nil
+}
+
+// 合约多空持仓
+type SymbolPosition struct {
+	Exchange             string                   `protobuf:"bytes,1,opt,name=exchange,proto3" json:"exchange"`
+	Symbol               string                   `protobuf:"bytes,2,opt,name=symbol,proto3" json:"symbol"`
+	Product              string                   `protobuf:"bytes,3,opt,name=product,proto3" json:"product"`
+	Direction            int32                    `protobuf:"varint,4,opt,name=direction,proto3" json:"direction"`
+	PreSettlementPrice   float64                  `protobuf:"fixed64,5,opt,name=pre_settlement_price,json=preSettlementPrice,proto3" json:"preSettlementPrice"`
+	SettlementPrice      float64                  `protobuf:"fixed64,6,opt,name=settlement_price,json=settlementPrice,proto3" json:"settlementPrice"`
+	LastPrice            float64                  `protobuf:"fixed64,7,opt,name=last_price,json=lastPrice,proto3" json:"lastPrice"`
+	TradingDay           int32                    `protobuf:"varint,8,opt,name=trading_day,json=tradingDay,proto3" json:"tradingDay"`
+	ProductType          int32                    `protobuf:"varint,9,opt,name=product_type,json=productType,proto3" json:"productType"`
+	Multiple             int32                    `protobuf:"varint,10,opt,name=multiple,proto3" json:"multiple"`
+	PriceTick            float64                  `protobuf:"fixed64,11,opt,name=price_tick,json=priceTick,proto3" json:"priceTick"`
+	SymbolName           string                   `protobuf:"bytes,12,opt,name=symbol_name,json=symbolName,proto3" json:"symbolName"`
+	UserName             string                   `protobuf:"bytes,13,opt,name=user_name,json=userName,proto3" json:"userName"`
+	Long                 *SymbolPositionSummation `protobuf:"bytes,14,opt,name=long,proto3" json:"long"`
+	Short                *SymbolPositionSummation `protobuf:"bytes,15,opt,name=short,proto3" json:"short"`
+	XXX_NoUnkeyedLiteral struct{}                 `json:"-"`
+	XXX_unrecognized     []byte                   `json:"-"`
+	XXX_sizecache        int32                    `json:"-"`
+}
+
+func (m *SymbolPosition) Reset()         { *m = SymbolPosition{} }
+func (m *SymbolPosition) String() string { return proto.CompactTextString(m) }
+func (*SymbolPosition) ProtoMessage()    {}
+func (*SymbolPosition) Descriptor() ([]byte, []int) {
+	return fileDescriptor_0f94fc40d6c0c65e, []int{3}
+}
+
+func (m *SymbolPosition) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_SymbolPosition.Unmarshal(m, b)
+}
+func (m *SymbolPosition) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_SymbolPosition.Marshal(b, m, deterministic)
+}
+func (m *SymbolPosition) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_SymbolPosition.Merge(m, src)
+}
+func (m *SymbolPosition) XXX_Size() int {
+	return xxx_messageInfo_SymbolPosition.Size(m)
+}
+func (m *SymbolPosition) XXX_DiscardUnknown() {
+	xxx_messageInfo_SymbolPosition.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_SymbolPosition proto.InternalMessageInfo
+
+func (m *SymbolPosition) GetExchange() string {
+	if m != nil {
+		return m.Exchange
+	}
+	return ""
+}
+
+func (m *SymbolPosition) GetSymbol() string {
+	if m != nil {
+		return m.Symbol
+	}
+	return ""
+}
+
+func (m *SymbolPosition) GetProduct() string {
+	if m != nil {
+		return m.Product
+	}
+	return ""
+}
+
+func (m *SymbolPosition) GetDirection() int32 {
+	if m != nil {
+		return m.Direction
+	}
+	return 0
+}
+
+func (m *SymbolPosition) GetPreSettlementPrice() float64 {
+	if m != nil {
+		return m.PreSettlementPrice
+	}
+	return 0
+}
+
+func (m *SymbolPosition) GetSettlementPrice() float64 {
+	if m != nil {
+		return m.SettlementPrice
+	}
+	return 0
+}
+
+func (m *SymbolPosition) GetLastPrice() float64 {
+	if m != nil {
+		return m.LastPrice
+	}
+	return 0
+}
+
+func (m *SymbolPosition) GetTradingDay() int32 {
+	if m != nil {
+		return m.TradingDay
+	}
+	return 0
+}
+
+func (m *SymbolPosition) GetProductType() int32 {
+	if m != nil {
+		return m.ProductType
+	}
+	return 0
+}
+
+func (m *SymbolPosition) GetMultiple() int32 {
+	if m != nil {
+		return m.Multiple
+	}
+	return 0
+}
+
+func (m *SymbolPosition) GetPriceTick() float64 {
+	if m != nil {
+		return m.PriceTick
+	}
+	return 0
+}
+
+func (m *SymbolPosition) GetSymbolName() string {
+	if m != nil {
+		return m.SymbolName
+	}
+	return ""
+}
+
+func (m *SymbolPosition) GetUserName() string {
+	if m != nil {
+		return m.UserName
+	}
+	return ""
+}
+
+func (m *SymbolPosition) GetLong() *SymbolPositionSummation {
+	if m != nil {
+		return m.Long
+	}
+	return nil
+}
+
+func (m *SymbolPosition) GetShort() *SymbolPositionSummation {
+	if m != nil {
+		return m.Short
+	}
+	return nil
+}
+
+// 持仓明细
+type PositionDetail struct {
+	BuId                 string        `protobuf:"bytes,1,opt,name=bu_id,json=buId,proto3" json:"buId"`
+	Exchange             string        `protobuf:"bytes,2,opt,name=exchange,proto3" json:"exchange"`
+	Symbol               string        `protobuf:"bytes,3,opt,name=symbol,proto3" json:"symbol"`
+	Product              string        `protobuf:"bytes,4,opt,name=product,proto3" json:"product"`
+	Direction            DirectionType `protobuf:"varint,5,opt,name=direction,proto3,enum=goshare.DirectionType" json:"direction"`
+	Volume               int32         `protobuf:"varint,6,opt,name=volume,proto3" json:"volume"`
+	Price                float64       `protobuf:"fixed64,7,opt,name=price,proto3" json:"price"`
+	ClosedVolume         int32         `protobuf:"varint,8,opt,name=closed_volume,json=closedVolume,proto3" json:"closedVolume"`
+	ClosedAmount         float64       `protobuf:"fixed64,9,opt,name=closed_amount,json=closedAmount,proto3" json:"closedAmount"`
+	OpenTime             int64         `protobuf:"varint,10,opt,name=open_time,json=openTime,proto3" json:"openTime"`
+	OpenTradingDay       int32         `protobuf:"varint,11,opt,name=open_trading_day,json=openTradingDay,proto3" json:"openTradingDay"`
+	FloatProfit          float64       `protobuf:"fixed64,12,opt,name=float_profit,json=floatProfit,proto3" json:"floatProfit"`
+	FrontId              int32         `protobuf:"varint,13,opt,name=front_id,json=frontId,proto3" json:"frontId"`
+	SessionId            int32         `protobuf:"varint,14,opt,name=session_id,json=sessionId,proto3" json:"sessionId"`
+	OrderRef             string        `protobuf:"bytes,15,opt,name=order_ref,json=orderRef,proto3" json:"orderRef"`
+	TradeId              string        `protobuf:"bytes,16,opt,name=trade_id,json=tradeId,proto3" json:"tradeId"`
+	TradeType            int32         `protobuf:"varint,17,opt,name=trade_type,json=tradeType,proto3" json:"tradeType"`
+	ClosedProfit         float64       `protobuf:"fixed64,18,opt,name=closed_profit,json=closedProfit,proto3" json:"closedProfit"`
+	PreSettlementPrice   float64       `protobuf:"fixed64,19,opt,name=pre_settlement_price,json=preSettlementPrice,proto3" json:"preSettlementPrice"`
+	InitialOpenAmount    float64       `protobuf:"fixed64,20,opt,name=initial_open_amount,json=initialOpenAmount,proto3" json:"initialOpenAmount"`
+	Multiple             int32         `protobuf:"varint,21,opt,name=multiple,proto3" json:"multiple"`
+	LastSettleDate       int32         `protobuf:"varint,22,opt,name=last_settle_date,json=lastSettleDate,proto3" json:"lastSettleDate"`
+	LastSettlementPrice  float64       `protobuf:"fixed64,23,opt,name=last_settlement_price,json=lastSettlementPrice,proto3" json:"lastSettlementPrice"`
+	LastSettlementProfit float64       `protobuf:"fixed64,24,opt,name=last_settlement_profit,json=lastSettlementProfit,proto3" json:"lastSettlementProfit"`
+	PriceTick            float64       `protobuf:"fixed64,25,opt,name=price_tick,json=priceTick,proto3" json:"priceTick"`
+	LastPrice            float64       `protobuf:"fixed64,26,opt,name=last_price,json=lastPrice,proto3" json:"lastPrice"`
+	UserName             string        `protobuf:"bytes,27,opt,name=user_name,json=userName,proto3" json:"userName"`
+	TradingDay           int32         `protobuf:"varint,28,opt,name=trading_day,json=tradingDay,proto3" json:"tradingDay"`
+	ExpireDate           int32         `protobuf:"varint,29,opt,name=expire_date,json=expireDate,proto3" json:"expireDate"`
+	Margin               float64       `protobuf:"fixed64,30,opt,name=margin,proto3" json:"margin"`
+	XXX_NoUnkeyedLiteral struct{}      `json:"-"`
+	XXX_unrecognized     []byte        `json:"-"`
+	XXX_sizecache        int32         `json:"-"`
+}
+
+func (m *PositionDetail) Reset()         { *m = PositionDetail{} }
+func (m *PositionDetail) String() string { return proto.CompactTextString(m) }
+func (*PositionDetail) ProtoMessage()    {}
+func (*PositionDetail) Descriptor() ([]byte, []int) {
+	return fileDescriptor_0f94fc40d6c0c65e, []int{4}
+}
+
+func (m *PositionDetail) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_PositionDetail.Unmarshal(m, b)
+}
+func (m *PositionDetail) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_PositionDetail.Marshal(b, m, deterministic)
+}
+func (m *PositionDetail) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_PositionDetail.Merge(m, src)
+}
+func (m *PositionDetail) XXX_Size() int {
+	return xxx_messageInfo_PositionDetail.Size(m)
+}
+func (m *PositionDetail) XXX_DiscardUnknown() {
+	xxx_messageInfo_PositionDetail.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_PositionDetail proto.InternalMessageInfo
+
+func (m *PositionDetail) GetBuId() string {
+	if m != nil {
+		return m.BuId
+	}
+	return ""
+}
+
+func (m *PositionDetail) GetExchange() string {
+	if m != nil {
+		return m.Exchange
+	}
+	return ""
+}
+
+func (m *PositionDetail) GetSymbol() string {
+	if m != nil {
+		return m.Symbol
+	}
+	return ""
+}
+
+func (m *PositionDetail) GetProduct() string {
+	if m != nil {
+		return m.Product
+	}
+	return ""
+}
+
+func (m *PositionDetail) GetDirection() DirectionType {
+	if m != nil {
+		return m.Direction
+	}
+	return DirectionType_LONG
+}
+
+func (m *PositionDetail) GetVolume() int32 {
+	if m != nil {
+		return m.Volume
+	}
+	return 0
+}
+
+func (m *PositionDetail) GetPrice() float64 {
+	if m != nil {
+		return m.Price
+	}
+	return 0
+}
+
+func (m *PositionDetail) GetClosedVolume() int32 {
+	if m != nil {
+		return m.ClosedVolume
+	}
+	return 0
+}
+
+func (m *PositionDetail) GetClosedAmount() float64 {
+	if m != nil {
+		return m.ClosedAmount
+	}
+	return 0
+}
+
+func (m *PositionDetail) GetOpenTime() int64 {
+	if m != nil {
+		return m.OpenTime
+	}
+	return 0
+}
+
+func (m *PositionDetail) GetOpenTradingDay() int32 {
+	if m != nil {
+		return m.OpenTradingDay
+	}
+	return 0
+}
+
+func (m *PositionDetail) GetFloatProfit() float64 {
+	if m != nil {
+		return m.FloatProfit
+	}
+	return 0
+}
+
+func (m *PositionDetail) GetFrontId() int32 {
+	if m != nil {
+		return m.FrontId
+	}
+	return 0
+}
+
+func (m *PositionDetail) GetSessionId() int32 {
+	if m != nil {
+		return m.SessionId
+	}
+	return 0
+}
+
+func (m *PositionDetail) GetOrderRef() string {
+	if m != nil {
+		return m.OrderRef
+	}
+	return ""
+}
+
+func (m *PositionDetail) GetTradeId() string {
+	if m != nil {
+		return m.TradeId
+	}
+	return ""
+}
+
+func (m *PositionDetail) GetTradeType() int32 {
+	if m != nil {
+		return m.TradeType
+	}
+	return 0
+}
+
+func (m *PositionDetail) GetClosedProfit() float64 {
+	if m != nil {
+		return m.ClosedProfit
+	}
+	return 0
+}
+
+func (m *PositionDetail) GetPreSettlementPrice() float64 {
+	if m != nil {
+		return m.PreSettlementPrice
+	}
+	return 0
+}
+
+func (m *PositionDetail) GetInitialOpenAmount() float64 {
+	if m != nil {
+		return m.InitialOpenAmount
+	}
+	return 0
+}
+
+func (m *PositionDetail) GetMultiple() int32 {
+	if m != nil {
+		return m.Multiple
+	}
+	return 0
+}
+
+func (m *PositionDetail) GetLastSettleDate() int32 {
+	if m != nil {
+		return m.LastSettleDate
+	}
+	return 0
+}
+
+func (m *PositionDetail) GetLastSettlementPrice() float64 {
+	if m != nil {
+		return m.LastSettlementPrice
+	}
+	return 0
+}
+
+func (m *PositionDetail) GetLastSettlementProfit() float64 {
+	if m != nil {
+		return m.LastSettlementProfit
+	}
+	return 0
+}
+
+func (m *PositionDetail) GetPriceTick() float64 {
+	if m != nil {
+		return m.PriceTick
+	}
+	return 0
+}
+
+func (m *PositionDetail) GetLastPrice() float64 {
+	if m != nil {
+		return m.LastPrice
+	}
+	return 0
+}
+
+func (m *PositionDetail) GetUserName() string {
+	if m != nil {
+		return m.UserName
+	}
+	return ""
+}
+
+func (m *PositionDetail) GetTradingDay() int32 {
+	if m != nil {
+		return m.TradingDay
+	}
+	return 0
+}
+
+func (m *PositionDetail) GetExpireDate() int32 {
+	if m != nil {
+		return m.ExpireDate
+	}
+	return 0
+}
+
+func (m *PositionDetail) GetMargin() float64 {
+	if m != nil {
+		return m.Margin
+	}
+	return 0
+}
+
+// 持仓明细
+type PositionDetailList struct {
+	List                 []*PositionDetail `protobuf:"bytes,1,rep,name=list,proto3" json:"list"`
+	Multiple             int32             `protobuf:"varint,2,opt,name=multiple,proto3" json:"multiple"`
+	PriceTick            float64           `protobuf:"fixed64,3,opt,name=price_tick,json=priceTick,proto3" json:"priceTick"`
+	TradingDay           int32             `protobuf:"varint,4,opt,name=trading_day,json=tradingDay,proto3" json:"tradingDay"`
+	XXX_NoUnkeyedLiteral struct{}          `json:"-"`
+	XXX_unrecognized     []byte            `json:"-"`
+	XXX_sizecache        int32             `json:"-"`
+}
+
+func (m *PositionDetailList) Reset()         { *m = PositionDetailList{} }
+func (m *PositionDetailList) String() string { return proto.CompactTextString(m) }
+func (*PositionDetailList) ProtoMessage()    {}
+func (*PositionDetailList) Descriptor() ([]byte, []int) {
+	return fileDescriptor_0f94fc40d6c0c65e, []int{5}
+}
+
+func (m *PositionDetailList) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_PositionDetailList.Unmarshal(m, b)
+}
+func (m *PositionDetailList) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_PositionDetailList.Marshal(b, m, deterministic)
+}
+func (m *PositionDetailList) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_PositionDetailList.Merge(m, src)
+}
+func (m *PositionDetailList) XXX_Size() int {
+	return xxx_messageInfo_PositionDetailList.Size(m)
+}
+func (m *PositionDetailList) XXX_DiscardUnknown() {
+	xxx_messageInfo_PositionDetailList.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_PositionDetailList proto.InternalMessageInfo
+
+func (m *PositionDetailList) GetList() []*PositionDetail {
+	if m != nil {
+		return m.List
+	}
+	return nil
+}
+
+func (m *PositionDetailList) GetMultiple() int32 {
+	if m != nil {
+		return m.Multiple
+	}
+	return 0
+}
+
+func (m *PositionDetailList) GetPriceTick() float64 {
+	if m != nil {
+		return m.PriceTick
+	}
+	return 0
+}
+
+func (m *PositionDetailList) GetTradingDay() int32 {
+	if m != nil {
+		return m.TradingDay
+	}
+	return 0
+}
+
+// 持仓明细
+type CloseTradeMatch struct {
+	UserId               string        `protobuf:"bytes,1,opt,name=user_id,json=userId,proto3" json:"userId"`
+	TaId                 string        `protobuf:"bytes,2,opt,name=ta_id,json=taId,proto3" json:"taId"`
+	BuId                 string        `protobuf:"bytes,3,opt,name=bu_id,json=buId,proto3" json:"buId"`
+	Exchange             string        `protobuf:"bytes,4,opt,name=exchange,proto3" json:"exchange"`
+	Symbol               string        `protobuf:"bytes,5,opt,name=symbol,proto3" json:"symbol"`
+	Product              string        `protobuf:"bytes,6,opt,name=product,proto3" json:"product"`
+	Direction            DirectionType `protobuf:"varint,7,opt,name=direction,proto3,enum=goshare.DirectionType" json:"direction"`
+	OpenVolume           int32         `protobuf:"varint,8,opt,name=open_volume,json=openVolume,proto3" json:"openVolume"`
+	OpenAmount           float64       `protobuf:"fixed64,9,opt,name=open_amount,json=openAmount,proto3" json:"openAmount"`
+	ClosedVolume         int32         `protobuf:"varint,10,opt,name=closed_volume,json=closedVolume,proto3" json:"closedVolume"`
+	ClosedAmount         float64       `protobuf:"fixed64,11,opt,name=closed_amount,json=closedAmount,proto3" json:"closedAmount"`
+	OpenTime             int64         `protobuf:"varint,12,opt,name=open_time,json=openTime,proto3" json:"openTime"`
+	CloseTime            int64         `protobuf:"varint,13,opt,name=close_time,json=closeTime,proto3" json:"closeTime"`
+	OpenTradingDay       int32         `protobuf:"varint,14,opt,name=open_trading_day,json=openTradingDay,proto3" json:"openTradingDay"`
+	CloseTradingDay      int32         `protobuf:"varint,15,opt,name=close_trading_day,json=closeTradingDay,proto3" json:"closeTradingDay"`
+	FloatProfit          float64       `protobuf:"fixed64,16,opt,name=float_profit,json=floatProfit,proto3" json:"floatProfit"`
+	OpenTradeId          string        `protobuf:"bytes,17,opt,name=open_trade_id,json=openTradeId,proto3" json:"openTradeId"`
+	CloseTradeId         string        `protobuf:"bytes,18,opt,name=close_trade_id,json=closeTradeId,proto3" json:"closeTradeId"`
+	OpenTradeType        int32         `protobuf:"varint,19,opt,name=open_trade_type,json=openTradeType,proto3" json:"openTradeType"`
+	CloseTradeType       int32         `protobuf:"varint,20,opt,name=close_trade_type,json=closeTradeType,proto3" json:"closeTradeType"`
+	OpenOrderHedgeType   int32         `protobuf:"varint,21,opt,name=open_order_hedge_type,json=openOrderHedgeType,proto3" json:"openOrderHedgeType"`
+	CloseOrderHedgeType  int32         `protobuf:"varint,22,opt,name=close_order_hedge_type,json=closeOrderHedgeType,proto3" json:"closeOrderHedgeType"`
+	ClosedProfit         float64       `protobuf:"fixed64,23,opt,name=closed_profit,json=closedProfit,proto3" json:"closedProfit"`
+	PreSettlementPrice   float64       `protobuf:"fixed64,24,opt,name=pre_settlement_price,json=preSettlementPrice,proto3" json:"preSettlementPrice"`
+	InitialOpenAmount    float64       `protobuf:"fixed64,27,opt,name=initial_open_amount,json=initialOpenAmount,proto3" json:"initialOpenAmount"`
+	Multiple             int32         `protobuf:"varint,28,opt,name=multiple,proto3" json:"multiple"`
+	LastSettleDate       int32         `protobuf:"varint,30,opt,name=last_settle_date,json=lastSettleDate,proto3" json:"lastSettleDate"`
+	LastSettlementPrice  float64       `protobuf:"fixed64,31,opt,name=last_settlement_price,json=lastSettlementPrice,proto3" json:"lastSettlementPrice"`
+	LastSettlementProfit float64       `protobuf:"fixed64,32,opt,name=last_settlement_profit,json=lastSettlementProfit,proto3" json:"lastSettlementProfit"`
+	PriceTick            float64       `protobuf:"fixed64,33,opt,name=price_tick,json=priceTick,proto3" json:"priceTick"`
+	SymbolName           string        `protobuf:"bytes,34,opt,name=symbol_name,json=symbolName,proto3" json:"symbolName"`
+	LastPrice            float64       `protobuf:"fixed64,35,opt,name=last_price,json=lastPrice,proto3" json:"lastPrice"`
+	UserName             string        `protobuf:"bytes,36,opt,name=user_name,json=userName,proto3" json:"userName"`
+	TradingDay           int32         `protobuf:"varint,37,opt,name=trading_day,json=tradingDay,proto3" json:"tradingDay"`
+	ExpireDate           int32         `protobuf:"varint,38,opt,name=expire_date,json=expireDate,proto3" json:"expireDate"`
+	Branch               string        `protobuf:"bytes,39,opt,name=branch,proto3" json:"branch"`
+	BranchName           string        `protobuf:"bytes,40,opt,name=branch_name,json=branchName,proto3" json:"branchName"`
+	Margin               float64       `protobuf:"fixed64,41,opt,name=margin,proto3" json:"margin"`
+	MarketValue          float64       `protobuf:"fixed64,42,opt,name=market_value,json=marketValue,proto3" json:"marketValue"`
+	CloseComment         string        `protobuf:"bytes,43,opt,name=close_comment,json=closeComment,proto3" json:"closeComment"`
+	OpenOrderSessionId   int32         `protobuf:"varint,44,opt,name=open_order_session_id,json=openOrderSessionId,proto3" json:"openOrderSessionId"`
+	CloseOrderSessionId  int32         `protobuf:"varint,45,opt,name=close_order_session_id,json=closeOrderSessionId,proto3" json:"closeOrderSessionId"`
+	OpenOrderRef         string        `protobuf:"bytes,46,opt,name=open_order_ref,json=openOrderRef,proto3" json:"openOrderRef"`
+	CloseOrderRef        string        `protobuf:"bytes,47,opt,name=close_order_ref,json=closeOrderRef,proto3" json:"closeOrderRef"`
+	XXX_NoUnkeyedLiteral struct{}      `json:"-"`
+	XXX_unrecognized     []byte        `json:"-"`
+	XXX_sizecache        int32         `json:"-"`
+}
+
+func (m *CloseTradeMatch) Reset()         { *m = CloseTradeMatch{} }
+func (m *CloseTradeMatch) String() string { return proto.CompactTextString(m) }
+func (*CloseTradeMatch) ProtoMessage()    {}
+func (*CloseTradeMatch) Descriptor() ([]byte, []int) {
+	return fileDescriptor_0f94fc40d6c0c65e, []int{6}
+}
+
+func (m *CloseTradeMatch) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_CloseTradeMatch.Unmarshal(m, b)
+}
+func (m *CloseTradeMatch) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_CloseTradeMatch.Marshal(b, m, deterministic)
+}
+func (m *CloseTradeMatch) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_CloseTradeMatch.Merge(m, src)
+}
+func (m *CloseTradeMatch) XXX_Size() int {
+	return xxx_messageInfo_CloseTradeMatch.Size(m)
+}
+func (m *CloseTradeMatch) XXX_DiscardUnknown() {
+	xxx_messageInfo_CloseTradeMatch.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_CloseTradeMatch proto.InternalMessageInfo
+
+func (m *CloseTradeMatch) GetUserId() string {
+	if m != nil {
+		return m.UserId
+	}
+	return ""
+}
+
+func (m *CloseTradeMatch) GetTaId() string {
+	if m != nil {
+		return m.TaId
+	}
+	return ""
+}
+
+func (m *CloseTradeMatch) GetBuId() string {
+	if m != nil {
+		return m.BuId
+	}
+	return ""
+}
+
+func (m *CloseTradeMatch) GetExchange() string {
+	if m != nil {
+		return m.Exchange
+	}
+	return ""
+}
+
+func (m *CloseTradeMatch) GetSymbol() string {
+	if m != nil {
+		return m.Symbol
+	}
+	return ""
+}
+
+func (m *CloseTradeMatch) GetProduct() string {
+	if m != nil {
+		return m.Product
+	}
+	return ""
+}
+
+func (m *CloseTradeMatch) GetDirection() DirectionType {
+	if m != nil {
+		return m.Direction
+	}
+	return DirectionType_LONG
+}
+
+func (m *CloseTradeMatch) GetOpenVolume() int32 {
+	if m != nil {
+		return m.OpenVolume
+	}
+	return 0
+}
+
+func (m *CloseTradeMatch) GetOpenAmount() float64 {
+	if m != nil {
+		return m.OpenAmount
+	}
+	return 0
+}
+
+func (m *CloseTradeMatch) GetClosedVolume() int32 {
+	if m != nil {
+		return m.ClosedVolume
+	}
+	return 0
+}
+
+func (m *CloseTradeMatch) GetClosedAmount() float64 {
+	if m != nil {
+		return m.ClosedAmount
+	}
+	return 0
+}
+
+func (m *CloseTradeMatch) GetOpenTime() int64 {
+	if m != nil {
+		return m.OpenTime
+	}
+	return 0
+}
+
+func (m *CloseTradeMatch) GetCloseTime() int64 {
+	if m != nil {
+		return m.CloseTime
+	}
+	return 0
+}
+
+func (m *CloseTradeMatch) GetOpenTradingDay() int32 {
+	if m != nil {
+		return m.OpenTradingDay
+	}
+	return 0
+}
+
+func (m *CloseTradeMatch) GetCloseTradingDay() int32 {
+	if m != nil {
+		return m.CloseTradingDay
+	}
+	return 0
+}
+
+func (m *CloseTradeMatch) GetFloatProfit() float64 {
+	if m != nil {
+		return m.FloatProfit
+	}
+	return 0
+}
+
+func (m *CloseTradeMatch) GetOpenTradeId() string {
+	if m != nil {
+		return m.OpenTradeId
+	}
+	return ""
+}
+
+func (m *CloseTradeMatch) GetCloseTradeId() string {
+	if m != nil {
+		return m.CloseTradeId
+	}
+	return ""
+}
+
+func (m *CloseTradeMatch) GetOpenTradeType() int32 {
+	if m != nil {
+		return m.OpenTradeType
+	}
+	return 0
+}
+
+func (m *CloseTradeMatch) GetCloseTradeType() int32 {
+	if m != nil {
+		return m.CloseTradeType
+	}
+	return 0
+}
+
+func (m *CloseTradeMatch) GetOpenOrderHedgeType() int32 {
+	if m != nil {
+		return m.OpenOrderHedgeType
+	}
+	return 0
+}
+
+func (m *CloseTradeMatch) GetCloseOrderHedgeType() int32 {
+	if m != nil {
+		return m.CloseOrderHedgeType
+	}
+	return 0
+}
+
+func (m *CloseTradeMatch) GetClosedProfit() float64 {
+	if m != nil {
+		return m.ClosedProfit
+	}
+	return 0
+}
+
+func (m *CloseTradeMatch) GetPreSettlementPrice() float64 {
+	if m != nil {
+		return m.PreSettlementPrice
+	}
+	return 0
+}
+
+func (m *CloseTradeMatch) GetInitialOpenAmount() float64 {
+	if m != nil {
+		return m.InitialOpenAmount
+	}
+	return 0
+}
+
+func (m *CloseTradeMatch) GetMultiple() int32 {
+	if m != nil {
+		return m.Multiple
+	}
+	return 0
+}
+
+func (m *CloseTradeMatch) GetLastSettleDate() int32 {
+	if m != nil {
+		return m.LastSettleDate
+	}
+	return 0
+}
+
+func (m *CloseTradeMatch) GetLastSettlementPrice() float64 {
+	if m != nil {
+		return m.LastSettlementPrice
+	}
+	return 0
+}
+
+func (m *CloseTradeMatch) GetLastSettlementProfit() float64 {
+	if m != nil {
+		return m.LastSettlementProfit
+	}
+	return 0
+}
+
+func (m *CloseTradeMatch) GetPriceTick() float64 {
+	if m != nil {
+		return m.PriceTick
+	}
+	return 0
+}
+
+func (m *CloseTradeMatch) GetSymbolName() string {
+	if m != nil {
+		return m.SymbolName
+	}
+	return ""
+}
+
+func (m *CloseTradeMatch) GetLastPrice() float64 {
+	if m != nil {
+		return m.LastPrice
+	}
+	return 0
+}
+
+func (m *CloseTradeMatch) GetUserName() string {
+	if m != nil {
+		return m.UserName
+	}
+	return ""
+}
+
+func (m *CloseTradeMatch) GetTradingDay() int32 {
+	if m != nil {
+		return m.TradingDay
+	}
+	return 0
+}
+
+func (m *CloseTradeMatch) GetExpireDate() int32 {
+	if m != nil {
+		return m.ExpireDate
+	}
+	return 0
+}
+
+func (m *CloseTradeMatch) GetBranch() string {
+	if m != nil {
+		return m.Branch
+	}
+	return ""
+}
+
+func (m *CloseTradeMatch) GetBranchName() string {
+	if m != nil {
+		return m.BranchName
+	}
+	return ""
+}
+
+func (m *CloseTradeMatch) GetMargin() float64 {
+	if m != nil {
+		return m.Margin
+	}
+	return 0
+}
+
+func (m *CloseTradeMatch) GetMarketValue() float64 {
+	if m != nil {
+		return m.MarketValue
+	}
+	return 0
+}
+
+func (m *CloseTradeMatch) GetCloseComment() string {
+	if m != nil {
+		return m.CloseComment
+	}
+	return ""
+}
+
+func (m *CloseTradeMatch) GetOpenOrderSessionId() int32 {
+	if m != nil {
+		return m.OpenOrderSessionId
+	}
+	return 0
+}
+
+func (m *CloseTradeMatch) GetCloseOrderSessionId() int32 {
+	if m != nil {
+		return m.CloseOrderSessionId
+	}
+	return 0
+}
+
+func (m *CloseTradeMatch) GetOpenOrderRef() string {
+	if m != nil {
+		return m.OpenOrderRef
+	}
+	return ""
+}
+
+func (m *CloseTradeMatch) GetCloseOrderRef() string {
+	if m != nil {
+		return m.CloseOrderRef
+	}
+	return ""
+}
+
+type CloseTradeMatchList struct {
+	List                 []*CloseTradeMatch `protobuf:"bytes,1,rep,name=list,proto3" json:"list"`
+	Multiple             int32              `protobuf:"varint,2,opt,name=multiple,proto3" json:"multiple"`
+	PriceTick            float64            `protobuf:"fixed64,3,opt,name=price_tick,json=priceTick,proto3" json:"priceTick"`
+	TradingDay           int32              `protobuf:"varint,4,opt,name=trading_day,json=tradingDay,proto3" json:"tradingDay"`
+	XXX_NoUnkeyedLiteral struct{}           `json:"-"`
+	XXX_unrecognized     []byte             `json:"-"`
+	XXX_sizecache        int32              `json:"-"`
+}
+
+func (m *CloseTradeMatchList) Reset()         { *m = CloseTradeMatchList{} }
+func (m *CloseTradeMatchList) String() string { return proto.CompactTextString(m) }
+func (*CloseTradeMatchList) ProtoMessage()    {}
+func (*CloseTradeMatchList) Descriptor() ([]byte, []int) {
+	return fileDescriptor_0f94fc40d6c0c65e, []int{7}
+}
+
+func (m *CloseTradeMatchList) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_CloseTradeMatchList.Unmarshal(m, b)
+}
+func (m *CloseTradeMatchList) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_CloseTradeMatchList.Marshal(b, m, deterministic)
+}
+func (m *CloseTradeMatchList) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_CloseTradeMatchList.Merge(m, src)
+}
+func (m *CloseTradeMatchList) XXX_Size() int {
+	return xxx_messageInfo_CloseTradeMatchList.Size(m)
+}
+func (m *CloseTradeMatchList) XXX_DiscardUnknown() {
+	xxx_messageInfo_CloseTradeMatchList.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_CloseTradeMatchList proto.InternalMessageInfo
+
+func (m *CloseTradeMatchList) GetList() []*CloseTradeMatch {
+	if m != nil {
+		return m.List
+	}
+	return nil
+}
+
+func (m *CloseTradeMatchList) GetMultiple() int32 {
+	if m != nil {
+		return m.Multiple
+	}
+	return 0
+}
+
+func (m *CloseTradeMatchList) GetPriceTick() float64 {
+	if m != nil {
+		return m.PriceTick
+	}
+	return 0
+}
+
+func (m *CloseTradeMatchList) GetTradingDay() int32 {
+	if m != nil {
+		return m.TradingDay
+	}
+	return 0
+}
+
 func init() {
 	proto.RegisterEnum("goshare.PositionSummationType", PositionSummationType_name, PositionSummationType_value)
 	proto.RegisterType((*PositionSummation)(nil), "goshare.PositionSummation")
 	proto.RegisterType((*Position)(nil), "goshare.Position")
+	proto.RegisterType((*SymbolPositionSummation)(nil), "goshare.SymbolPositionSummation")
+	proto.RegisterType((*SymbolPosition)(nil), "goshare.SymbolPosition")
+	proto.RegisterType((*PositionDetail)(nil), "goshare.PositionDetail")
+	proto.RegisterType((*PositionDetailList)(nil), "goshare.PositionDetailList")
+	proto.RegisterType((*CloseTradeMatch)(nil), "goshare.CloseTradeMatch")
+	proto.RegisterType((*CloseTradeMatchList)(nil), "goshare.CloseTradeMatchList")
 }
 
 func init() { proto.RegisterFile("goshare/position.proto", fileDescriptor_0f94fc40d6c0c65e) }
 
 var fileDescriptor_0f94fc40d6c0c65e = []byte{
-	// 615 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x84, 0x94, 0x4f, 0x4f, 0x1b, 0x3d,
-	0x10, 0xc6, 0xdf, 0x05, 0xf2, 0x67, 0x27, 0xf0, 0x12, 0x0c, 0xa4, 0x16, 0x6d, 0xd5, 0x94, 0x53,
-	0xda, 0xaa, 0x09, 0x2a, 0x97, 0x1e, 0x7a, 0xa1, 0x85, 0x03, 0x52, 0xd5, 0xa2, 0x25, 0x17, 0x7a,
-	0x59, 0x79, 0x77, 0x4d, 0x62, 0xe1, 0x5d, 0xaf, 0x6c, 0x6f, 0xdb, 0xf4, 0xc3, 0xa3, 0xca, 0x63,
-	0x27, 0xa8, 0xe4, 0xc0, 0xcd, 0xcf, 0xef, 0x99, 0xf1, 0xac, 0x67, 0x46, 0x0b, 0x83, 0x99, 0x32,
-	0x73, 0xa6, 0xf9, 0xa4, 0x56, 0x46, 0x58, 0xa1, 0xaa, 0x71, 0xad, 0x95, 0x55, 0xa4, 0x13, 0xf8,
-	0xf1, 0x7d, 0x04, 0x7b, 0x57, 0xc1, 0xbb, 0x6e, 0xca, 0x92, 0xb9, 0x03, 0x79, 0x01, 0x71, 0x21,
-	0x34, 0xcf, 0x9d, 0xa0, 0xd1, 0x30, 0x1a, 0xb5, 0x92, 0x07, 0x40, 0x08, 0x6c, 0xd9, 0x45, 0xcd,
-	0xe9, 0x06, 0x1a, 0x78, 0x26, 0x47, 0xd0, 0x5d, 0x96, 0xa0, 0x9b, 0xc8, 0x57, 0xda, 0xc5, 0xe7,
-	0xca, 0x58, 0xba, 0x35, 0x8c, 0x46, 0x51, 0x82, 0x67, 0x32, 0x80, 0x36, 0x2b, 0x55, 0x53, 0x59,
-	0xda, 0x42, 0x1a, 0x94, 0xe3, 0xb7, 0x5a, 0xfd, 0xe1, 0x15, 0x6d, 0xe3, 0x2d, 0x41, 0xb9, 0x2f,
-	0x62, 0x3f, 0x99, 0x90, 0x2c, 0x93, 0x9c, 0x76, 0xfc, 0x17, 0xad, 0x00, 0x79, 0x0d, 0xdb, 0xb7,
-	0x52, 0x31, 0x9b, 0xd6, 0x5a, 0xdd, 0x0a, 0x4b, 0x63, 0xbc, 0xb3, 0x87, 0xec, 0x0a, 0x91, 0xbb,
-	0xb8, 0x64, 0x7a, 0x26, 0x2a, 0xda, 0xf3, 0x05, 0xbd, 0x3a, 0xbe, 0x6f, 0x41, 0x77, 0xd9, 0x00,
-	0xf2, 0x0c, 0x3a, 0x8d, 0xe1, 0x3a, 0x15, 0x05, 0xbe, 0x3a, 0x4e, 0xda, 0x4e, 0x5e, 0x16, 0x64,
-	0x1f, 0x5a, 0x96, 0x39, 0xbc, 0x81, 0x78, 0xcb, 0x32, 0x0f, 0xb3, 0xc6, 0xc1, 0x4d, 0x0f, 0xb3,
-	0xe6, 0xb2, 0x70, 0x8d, 0xe0, 0xbf, 0xf3, 0x39, 0xab, 0x66, 0x1c, 0x1f, 0x1c, 0x27, 0x2b, 0xed,
-	0xbe, 0xc1, 0x2c, 0xca, 0x4c, 0x49, 0x7c, 0x74, 0x9c, 0x04, 0x45, 0x28, 0x74, 0x6a, 0xad, 0x8a,
-	0x26, 0xb7, 0xf8, 0xea, 0x38, 0x59, 0xca, 0x7f, 0x07, 0xd1, 0x79, 0x3c, 0x88, 0x13, 0x68, 0x59,
-	0x65, 0x99, 0xa4, 0xdd, 0x61, 0x34, 0xea, 0x7d, 0x38, 0x1a, 0x87, 0xa9, 0x8e, 0xd7, 0x26, 0x9a,
-	0xf8, 0x40, 0x9f, 0x51, 0xb0, 0x05, 0x76, 0xe8, 0xc9, 0x8c, 0x82, 0x2d, 0xc8, 0x47, 0x88, 0x17,
-	0xdc, 0x58, 0xae, 0x5d, 0x16, 0x3c, 0x99, 0xf5, 0x10, 0x4c, 0x4e, 0xe0, 0xa0, 0xd6, 0x3c, 0x35,
-	0xdc, 0x5a, 0xc9, 0x4b, 0x5e, 0xb9, 0xe9, 0x88, 0x9c, 0x87, 0xfe, 0x93, 0x5a, 0xf3, 0xeb, 0x95,
-	0x75, 0xe5, 0x1c, 0xf2, 0x06, 0xfa, 0x6b, 0xd1, 0xdb, 0x18, 0xbd, 0x6b, 0x1e, 0x85, 0xbe, 0x04,
-	0x90, 0xcc, 0x2c, 0x83, 0x76, 0x30, 0x28, 0x76, 0xc4, 0xdb, 0xaf, 0xa0, 0x67, 0x35, 0x2b, 0x44,
-	0x35, 0x4b, 0xdd, 0x77, 0xff, 0x8f, 0x9d, 0x83, 0x80, 0xce, 0xd9, 0xc2, 0x6d, 0x4c, 0xe8, 0x71,
-	0x8a, 0xbb, 0xbc, 0x8b, 0x11, 0xbd, 0xc0, 0xa6, 0x61, 0xa5, 0xcb, 0x46, 0x5a, 0x51, 0x4b, 0x4e,
-	0xfb, 0x7e, 0xa5, 0x97, 0xda, 0x95, 0xc7, 0xca, 0xa9, 0x15, 0xf9, 0x1d, 0xdd, 0xf3, 0xe5, 0x91,
-	0x4c, 0x45, 0x7e, 0xe7, 0xca, 0xfb, 0xd1, 0xa6, 0x15, 0x2b, 0x39, 0x25, 0x38, 0x54, 0xf0, 0xe8,
-	0x1b, 0x2b, 0x39, 0x79, 0x0e, 0x31, 0x2e, 0x1a, 0xda, 0xfb, 0x7e, 0x4d, 0x1c, 0x40, 0x73, 0x00,
-	0xed, 0x4c, 0xb3, 0x2a, 0x9f, 0xd3, 0x03, 0xbf, 0x26, 0x5e, 0xb9, 0x5b, 0xfd, 0xc9, 0xa7, 0x1d,
-	0xfa, 0x5b, 0x3d, 0xc2, 0xc4, 0x53, 0x18, 0x08, 0x93, 0xe6, 0x52, 0x19, 0x9e, 0xe2, 0xf4, 0x52,
-	0x26, 0xa5, 0xfa, 0xc5, 0x0b, 0x3a, 0x18, 0x46, 0xa3, 0x6e, 0xb2, 0x2f, 0xcc, 0x17, 0x67, 0x4e,
-	0x9d, 0x77, 0xe6, 0xad, 0xb7, 0x9f, 0xe0, 0x70, 0x6d, 0x8c, 0xf8, 0xfe, 0x18, 0x5a, 0xd3, 0xef,
-	0xd3, 0xb3, 0xaf, 0xfd, 0xff, 0xfc, 0xf1, 0xfc, 0xec, 0xa6, 0x1f, 0x91, 0x1d, 0x88, 0x6f, 0x2e,
-	0xae, 0xa7, 0x17, 0x89, 0x93, 0x1b, 0x9f, 0xdf, 0xff, 0x78, 0x37, 0x13, 0x76, 0xde, 0x64, 0xe3,
-	0x5c, 0x95, 0x93, 0x52, 0x54, 0x5c, 0x33, 0xa9, 0xb9, 0x99, 0xe0, 0x7f, 0xc6, 0x4c, 0x8c, 0xce,
-	0x27, 0x33, 0x35, 0x09, 0x0b, 0x93, 0xb5, 0x11, 0x9f, 0xfe, 0x0d, 0x00, 0x00, 0xff, 0xff, 0x72,
-	0xa6, 0x02, 0x9f, 0x98, 0x04, 0x00, 0x00,
+	// 1502 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xdc, 0x58, 0xcb, 0x6e, 0xdb, 0x46,
+	0x17, 0xfe, 0xa9, 0x9b, 0xc5, 0xa3, 0x8b, 0x65, 0xca, 0x96, 0x19, 0xdb, 0x89, 0x15, 0x25, 0x7f,
+	0xaa, 0xdc, 0xec, 0xd4, 0x09, 0x8a, 0x2e, 0xba, 0x71, 0xe3, 0x00, 0x35, 0x90, 0x36, 0x01, 0x2d,
+	0x04, 0x48, 0x37, 0xc4, 0x98, 0x1c, 0x4b, 0x44, 0x78, 0x11, 0xc8, 0x51, 0x1a, 0xf5, 0x09, 0xfa,
+	0x04, 0xd9, 0x15, 0x5d, 0xf4, 0x21, 0xfa, 0x3c, 0x7d, 0x93, 0x62, 0xce, 0x8c, 0xc4, 0x9b, 0x75,
+	0x71, 0x80, 0x6e, 0xba, 0xd3, 0x7c, 0xe7, 0x3b, 0x67, 0x86, 0x33, 0xdf, 0xf9, 0x66, 0x6c, 0xe8,
+	0x0c, 0x83, 0x68, 0x44, 0x42, 0x7a, 0x3c, 0x0e, 0x22, 0x87, 0x39, 0x81, 0x7f, 0x34, 0x0e, 0x03,
+	0x16, 0x68, 0x1b, 0x12, 0xdf, 0x6b, 0xcf, 0x08, 0x41, 0x68, 0xd3, 0x50, 0x44, 0x7b, 0x9f, 0x0b,
+	0xb0, 0xf5, 0x56, 0x26, 0x5c, 0x4c, 0x3c, 0x8f, 0xf0, 0x1f, 0xda, 0x0b, 0x50, 0x6d, 0x27, 0xa4,
+	0x16, 0x1f, 0xe8, 0x4a, 0x57, 0xe9, 0x37, 0x4f, 0x3a, 0x47, 0x32, 0xfd, 0xe8, 0x6c, 0x16, 0x19,
+	0x4c, 0xc7, 0xd4, 0x88, 0x89, 0x9a, 0x06, 0x25, 0x36, 0x1d, 0x53, 0xbd, 0xd0, 0x55, 0xfa, 0x65,
+	0x03, 0x7f, 0x6b, 0x7b, 0x50, 0x9d, 0xad, 0x47, 0x2f, 0x22, 0x3e, 0x1f, 0x73, 0xbe, 0x15, 0x44,
+	0x4c, 0x2f, 0x75, 0x95, 0xbe, 0x62, 0xe0, 0x6f, 0xad, 0x03, 0x15, 0xe2, 0x05, 0x13, 0x9f, 0xe9,
+	0x65, 0x44, 0xe5, 0x88, 0xe3, 0x57, 0x61, 0xf0, 0x2b, 0xf5, 0xf5, 0x0a, 0x56, 0x91, 0x23, 0xed,
+	0x00, 0x54, 0xf2, 0x91, 0x38, 0x2e, 0xb9, 0x74, 0xa9, 0xbe, 0x81, 0xa1, 0x18, 0xd0, 0xee, 0x42,
+	0xfd, 0xca, 0x0d, 0x08, 0x33, 0xc7, 0x61, 0x70, 0xe5, 0x30, 0x5d, 0xc5, 0x9a, 0x35, 0xc4, 0xde,
+	0x22, 0xc4, 0x0b, 0x7b, 0x24, 0x1c, 0x3a, 0xbe, 0x5e, 0x13, 0x13, 0x8a, 0x51, 0xef, 0x73, 0x05,
+	0xaa, 0xb3, 0x8d, 0xd1, 0x76, 0x61, 0x63, 0x12, 0xd1, 0xd0, 0x74, 0x6c, 0xdc, 0x0d, 0xd5, 0xa8,
+	0xf0, 0xe1, 0xb9, 0xad, 0xb5, 0xa1, 0xcc, 0x08, 0x87, 0x0b, 0x08, 0x97, 0x18, 0x11, 0xe0, 0xe5,
+	0x84, 0x83, 0x45, 0x01, 0x5e, 0x4e, 0xce, 0x6d, 0xbe, 0x11, 0xf4, 0x93, 0x35, 0x22, 0xfe, 0x90,
+	0xe2, 0x07, 0xab, 0xc6, 0x7c, 0xcc, 0xd7, 0x10, 0x4d, 0xbd, 0xcb, 0xc0, 0xc5, 0x8f, 0x56, 0x0d,
+	0x39, 0xd2, 0x74, 0xd8, 0x18, 0x87, 0x81, 0x3d, 0xb1, 0x18, 0x7e, 0xb5, 0x6a, 0xcc, 0x86, 0xe9,
+	0x03, 0xda, 0x58, 0xf7, 0x80, 0x9e, 0x41, 0x99, 0x05, 0x8c, 0xb8, 0x7a, 0xb5, 0xab, 0xf4, 0x6b,
+	0x27, 0x7b, 0xf3, 0x8c, 0x9c, 0x02, 0x0c, 0x41, 0x14, 0x19, 0x36, 0x99, 0xe2, 0xce, 0xad, 0xcc,
+	0xb0, 0xc9, 0x54, 0xfb, 0x16, 0xd4, 0x29, 0x8d, 0x18, 0x0d, 0x79, 0x16, 0xac, 0xcc, 0x8a, 0xc9,
+	0xda, 0x33, 0xd8, 0x1e, 0x87, 0xd4, 0x8c, 0x28, 0x63, 0x2e, 0xf5, 0xa8, 0xcf, 0x4f, 0xcd, 0xb1,
+	0xa8, 0x3c, 0x17, 0x6d, 0x1c, 0xd2, 0x8b, 0x79, 0xe8, 0x2d, 0x8f, 0x68, 0x0f, 0xa1, 0x95, 0x63,
+	0xd7, 0x91, 0xbd, 0x19, 0x65, 0xa8, 0xb7, 0x01, 0x5c, 0x12, 0xcd, 0x48, 0x0d, 0x24, 0xa9, 0x1c,
+	0x11, 0xe1, 0x43, 0xa8, 0xb1, 0x90, 0xd8, 0x8e, 0x3f, 0x34, 0xf9, 0xba, 0x9b, 0x28, 0x24, 0x90,
+	0xd0, 0x19, 0x99, 0x72, 0x25, 0xc9, 0xbd, 0x37, 0x51, 0xe3, 0x9b, 0xc8, 0xa8, 0x49, 0x6c, 0x20,
+	0xa5, 0xee, 0x4d, 0x5c, 0xe6, 0x8c, 0x5d, 0xaa, 0xb7, 0x84, 0xd4, 0x67, 0x63, 0x3e, 0x3d, 0xce,
+	0x6c, 0x32, 0xc7, 0xfa, 0xa0, 0x6f, 0x89, 0xe9, 0x11, 0x19, 0x38, 0xd6, 0x07, 0x3e, 0xbd, 0x38,
+	0x72, 0xd3, 0x27, 0x1e, 0xd5, 0x35, 0x3c, 0x6c, 0x10, 0xd0, 0x4f, 0xc4, 0xa3, 0xda, 0x3e, 0xa8,
+	0x28, 0x40, 0x0c, 0xb7, 0x85, 0x7c, 0x38, 0x80, 0xc1, 0x0e, 0x54, 0x2e, 0x43, 0xe2, 0x5b, 0x23,
+	0x7d, 0x5b, 0xc8, 0x47, 0x8c, 0x78, 0x55, 0xf1, 0x4b, 0xa4, 0xed, 0x88, 0xaa, 0x02, 0xc2, 0xc4,
+	0xe7, 0xd0, 0x71, 0x22, 0xd3, 0x72, 0x83, 0x88, 0x9a, 0x78, 0x7a, 0x26, 0x71, 0xdd, 0xe0, 0x17,
+	0x6a, 0xeb, 0x9d, 0xae, 0xd2, 0xaf, 0x1a, 0x6d, 0x27, 0x7a, 0xc9, 0x83, 0x03, 0x1e, 0x3b, 0x15,
+	0xa1, 0xde, 0x5f, 0x0a, 0xec, 0x5e, 0xe0, 0xca, 0xf2, 0xbe, 0x31, 0x17, 0x98, 0x72, 0x63, 0x81,
+	0x15, 0xbe, 0x48, 0x60, 0xc5, 0x1b, 0x08, 0xac, 0xf7, 0x67, 0x09, 0x9a, 0xe9, 0x95, 0xa7, 0xba,
+	0x52, 0x59, 0xd8, 0x95, 0x85, 0x45, 0x5d, 0x59, 0x4c, 0x77, 0xe5, 0x41, 0xb2, 0x2b, 0x4b, 0xc2,
+	0x8c, 0x92, 0xdd, 0x77, 0xbd, 0xbe, 0xcb, 0x37, 0xd2, 0x77, 0x65, 0x1d, 0x7d, 0x6f, 0xac, 0xd0,
+	0x77, 0x75, 0xa5, 0xbe, 0xd5, 0xe5, 0xfa, 0x86, 0xa5, 0xfa, 0xae, 0xad, 0xd0, 0x77, 0x7d, 0xb9,
+	0xbe, 0x1b, 0x19, 0x7d, 0xbf, 0x80, 0x92, 0x1b, 0xf8, 0x43, 0xec, 0xca, 0xda, 0x49, 0x77, 0x7e,
+	0xd8, 0x0b, 0x54, 0x68, 0x20, 0x5b, 0xfb, 0x06, 0xca, 0xd1, 0x28, 0x08, 0x19, 0xb6, 0xea, 0x3a,
+	0x69, 0x82, 0xde, 0xfb, 0xad, 0x0a, 0xcd, 0x59, 0xf0, 0x8c, 0x32, 0xe2, 0xb8, 0xb1, 0xa1, 0x2b,
+	0x0b, 0x0c, 0xbd, 0xb0, 0x50, 0x3a, 0xc5, 0x45, 0xd2, 0x29, 0x2d, 0x31, 0xf4, 0xf2, 0xba, 0x86,
+	0xde, 0x81, 0xca, 0xc7, 0xc0, 0x9d, 0x78, 0x74, 0x76, 0x2b, 0x8a, 0x91, 0xb6, 0x0d, 0xe5, 0xa4,
+	0x10, 0xc4, 0x40, 0xbb, 0x07, 0x0d, 0xec, 0x75, 0xdb, 0x94, 0x49, 0x42, 0x06, 0x75, 0x01, 0xbe,
+	0x13, 0xa9, 0x31, 0x49, 0xde, 0xc3, 0xe2, 0xce, 0x94, 0xa4, 0x53, 0x71, 0x1b, 0xef, 0x83, 0x1a,
+	0x8c, 0xa9, 0x6f, 0x32, 0xc7, 0x13, 0x5a, 0x28, 0x1a, 0x55, 0x0e, 0x0c, 0x1c, 0x8f, 0x6a, 0x7d,
+	0x68, 0x89, 0x60, 0x42, 0x70, 0x35, 0x9c, 0xa9, 0x89, 0x9c, 0x94, 0xe8, 0x52, 0xd7, 0x73, 0x3d,
+	0x7f, 0x3d, 0xdf, 0x82, 0xea, 0x55, 0x18, 0xf8, 0x8c, 0xef, 0x7e, 0x03, 0x8b, 0x6c, 0xe0, 0xf8,
+	0xdc, 0xe6, 0x9a, 0x8b, 0x68, 0x14, 0x39, 0x81, 0xcf, 0x83, 0xc2, 0xb2, 0x55, 0x89, 0x9c, 0xdb,
+	0xb8, 0x46, 0xfe, 0xd0, 0x31, 0x43, 0x7a, 0x85, 0x1a, 0x50, 0x8d, 0x2a, 0x02, 0x06, 0xbd, 0xe2,
+	0x65, 0xf9, 0xf2, 0x28, 0xcf, 0x6c, 0x89, 0x93, 0xc0, 0xb1, 0x28, 0x2b, 0x42, 0xd8, 0x07, 0x5b,
+	0xa2, 0x2c, 0x22, 0xd8, 0x05, 0xf1, 0xfe, 0xc8, 0x45, 0x6b, 0xc9, 0xfd, 0x91, 0xab, 0x5e, 0xd4,
+	0xea, 0xed, 0x85, 0xad, 0x7e, 0x04, 0x6d, 0xc7, 0x77, 0x98, 0x43, 0x5c, 0x13, 0x37, 0x4f, 0x6e,
+	0xfe, 0x36, 0x26, 0x6c, 0xc9, 0xd0, 0x9b, 0x31, 0xf5, 0xe5, 0x09, 0x24, 0x9b, 0x71, 0x27, 0xd3,
+	0x8c, 0x7d, 0x68, 0xa1, 0x17, 0x88, 0xe9, 0x4d, 0x9b, 0x30, 0x8a, 0x86, 0x5e, 0x36, 0x9a, 0x1c,
+	0x17, 0x53, 0x9f, 0x11, 0x46, 0xb5, 0x13, 0xd8, 0x49, 0x30, 0x13, 0x0b, 0xdd, 0xc5, 0x79, 0xdb,
+	0x31, 0x3d, 0x5e, 0xe9, 0x0b, 0xe8, 0xe4, 0x73, 0x70, 0x27, 0x74, 0x4c, 0xda, 0xce, 0x26, 0xe1,
+	0x8e, 0xa4, 0x0d, 0xe2, 0x56, 0xd6, 0x20, 0xd2, 0xf6, 0xb5, 0x97, 0xb5, 0xaf, 0x94, 0x3d, 0xec,
+	0x67, 0xec, 0x21, 0xe3, 0x6d, 0x07, 0x39, 0x6f, 0x3b, 0x84, 0x1a, 0xfd, 0x34, 0x76, 0x42, 0xb9,
+	0x15, 0xb7, 0x05, 0x41, 0x40, 0xb8, 0x0d, 0xf1, 0x1b, 0xf0, 0x4e, 0xea, 0x0d, 0xf8, 0xbb, 0x02,
+	0x5a, 0xda, 0x0a, 0x5e, 0x3b, 0x11, 0xd3, 0x1e, 0x43, 0xc9, 0x75, 0x22, 0xa6, 0x2b, 0xdd, 0x62,
+	0xbf, 0x76, 0xb2, 0x9b, 0xbb, 0x7c, 0x04, 0xd5, 0x40, 0x52, 0xea, 0xa0, 0x0a, 0x4b, 0x5d, 0xb3,
+	0x78, 0x8d, 0x6b, 0x26, 0x3f, 0xac, 0x94, 0xfd, 0xb0, 0xde, 0xdf, 0x75, 0xd8, 0x14, 0x17, 0x34,
+	0x97, 0xe7, 0x8f, 0x84, 0x59, 0xa3, 0xff, 0xca, 0x53, 0xf5, 0x10, 0x6a, 0xd8, 0x07, 0x29, 0xa7,
+	0x02, 0x0e, 0x49, 0x9f, 0x9a, 0x11, 0x52, 0x2e, 0x85, 0x04, 0xd9, 0x21, 0x39, 0xb7, 0x83, 0x75,
+	0xdc, 0xae, 0xb6, 0xca, 0xed, 0xea, 0x19, 0xb7, 0xbb, 0x0d, 0x20, 0x1f, 0x50, 0x8e, 0xbc, 0xba,
+	0x8a, 0x86, 0x8a, 0xc8, 0x42, 0x33, 0x6c, 0x5e, 0x6b, 0x86, 0x8f, 0x60, 0x4b, 0x16, 0x4a, 0x50,
+	0xc5, 0x33, 0x73, 0xd3, 0x9a, 0x1d, 0xf2, 0x02, 0xe3, 0x6c, 0xe5, 0x8d, 0xb3, 0x07, 0x8d, 0xf9,
+	0xc4, 0x68, 0x73, 0x5b, 0x78, 0x2c, 0xb5, 0xd9, 0xac, 0xdc, 0xea, 0xee, 0x43, 0x33, 0x9e, 0x12,
+	0x49, 0xe2, 0xe5, 0x59, 0x9f, 0xcf, 0xc7, 0x59, 0x0f, 0x60, 0x33, 0x51, 0x09, 0x5d, 0xb1, 0x8d,
+	0xcb, 0x6a, 0xcc, 0x6b, 0xa1, 0x33, 0xf6, 0xa1, 0x95, 0xac, 0x86, 0xc4, 0x6d, 0xf1, 0xa9, 0x71,
+	0x3d, 0x64, 0x7e, 0x0d, 0x3b, 0x58, 0x51, 0xf8, 0xf3, 0x88, 0xda, 0x43, 0x49, 0x17, 0x4e, 0xa6,
+	0xf1, 0xe0, 0x1b, 0x1e, 0xfb, 0x81, 0x87, 0x30, 0xe5, 0x39, 0x74, 0x44, 0xf1, 0x5c, 0x8e, 0x70,
+	0xb6, 0x36, 0x46, 0x33, 0x49, 0x39, 0xaf, 0xde, 0xbd, 0x81, 0x57, 0xeb, 0x37, 0xf5, 0xea, 0xfd,
+	0x75, 0xbc, 0xfa, 0x60, 0x0d, 0xaf, 0xbe, 0x73, 0x33, 0xaf, 0x3e, 0xfc, 0x12, 0xaf, 0xee, 0xae,
+	0xed, 0xd5, 0x77, 0x57, 0x3c, 0xe6, 0x7a, 0xb9, 0xc7, 0x5c, 0xda, 0xcc, 0xef, 0x2d, 0x35, 0xf3,
+	0xfb, 0xcb, 0xcd, 0xfc, 0xff, 0xab, 0xcc, 0xfc, 0xc1, 0x75, 0x66, 0x2e, 0xff, 0x1a, 0xfa, 0x6a,
+	0xd9, 0x5f, 0x43, 0xfd, 0xdc, 0x5f, 0x43, 0xf1, 0x2d, 0xf0, 0x30, 0x79, 0x0b, 0xf0, 0x66, 0xf3,
+	0x48, 0xf8, 0x81, 0x32, 0xf3, 0x23, 0x71, 0x27, 0x54, 0x7f, 0x24, 0x9a, 0x4d, 0x60, 0xef, 0x38,
+	0x34, 0x17, 0x9a, 0x69, 0x05, 0x1e, 0xdf, 0x48, 0xfd, 0x71, 0xa2, 0x8f, 0x5e, 0x0a, 0x2c, 0xa3,
+	0xfa, 0xc4, 0xd3, 0xe5, 0x49, 0x46, 0xf5, 0x17, 0xf3, 0x37, 0x4c, 0x46, 0xf5, 0x89, 0x9c, 0xa7,
+	0x59, 0xd5, 0xc7, 0x49, 0xf7, 0xa1, 0x99, 0x98, 0x87, 0xbf, 0x7e, 0x8e, 0xc4, 0x6a, 0xe6, 0x13,
+	0xf0, 0x17, 0xd0, 0x03, 0xd8, 0x4c, 0x96, 0xe6, 0xb4, 0x63, 0xa4, 0x35, 0xe2, 0x9a, 0x06, 0xbd,
+	0xea, 0xfd, 0xa1, 0x40, 0x3b, 0x73, 0xc7, 0xe0, 0x25, 0xf8, 0x24, 0x75, 0x09, 0xea, 0x73, 0x47,
+	0xcf, 0x70, 0xff, 0xfd, 0x5b, 0xf0, 0xd1, 0x77, 0xb0, 0x93, 0x7b, 0xcc, 0x63, 0xfb, 0xab, 0x50,
+	0x1e, 0xbc, 0x19, 0x9c, 0xbe, 0x6e, 0xfd, 0x4f, 0xfc, 0x3c, 0x3b, 0x7d, 0xdf, 0x52, 0xb4, 0x06,
+	0xa8, 0xef, 0x5f, 0x5d, 0x0c, 0x5e, 0x19, 0x7c, 0x58, 0xf8, 0xfe, 0xe9, 0xcf, 0x8f, 0x87, 0x0e,
+	0x1b, 0x4d, 0x2e, 0x8f, 0xac, 0xc0, 0x3b, 0xf6, 0x1c, 0x9f, 0x86, 0xc4, 0x0d, 0x69, 0x74, 0x8c,
+	0xff, 0x1f, 0x8b, 0x8e, 0xa3, 0xd0, 0x3a, 0x1e, 0x06, 0xc7, 0xf2, 0xf3, 0x2e, 0x2b, 0x08, 0x3f,
+	0xff, 0x27, 0x00, 0x00, 0xff, 0xff, 0x94, 0xe6, 0x6a, 0xc8, 0x6e, 0x13, 0x00, 0x00,
 }

@@ -3,7 +3,6 @@ package goshare;
 
 option go_package = "github.com/mineralres/protos/src/go/goshare";
 
-
 // 品种类型
 enum ProductType {
   UNKOWN_PRODUCT = 0; // 未知
@@ -13,7 +12,7 @@ enum ProductType {
   COMBINATION    = 4; // 组合
   OPTION         = 5; // 期权
   FUTURE_OPTION  = 6; // 期货期权
-  STOCK_OPTION   = 7; // 股票期权
+  SPOT_OPTION    = 7; // 现货期权
   SSE_ETF_OPTION = 8; // 上证50ETF期权
 }
 
@@ -23,6 +22,11 @@ message MarketStatus {
   bool  send     = 2; // 允许发单
   bool  cancel   = 3; // 可以撤单
   bool  matching = 4; // 撮合时段
+}
+
+enum CallPutType {
+  CALL = 0;
+  PUT  = 1;
 }
 
 // 合约属性
@@ -66,6 +70,46 @@ message Instrument {
   string   product_class           = 37; // 品种板块
   bool     distinguish_position_time_type = 38; // 是否区别昨仓和今仓
   repeated MarketStatus time_rule         = 39; // 各时段交易状态
+  int32                 left_days         = 40; // 剩余交易天数
+  string                month_group       = 41; // 期权月份
+  CallPutType           call_put_type     = 42;
 }
 
+// 合约列表
 message InstrumentList { repeated Instrument list = 1; }
+
+// 期权按月分组
+message OptionMonthGroup {
+  string   exchange           = 1;
+  string   product            = 2;
+  string   strike             = 3;
+  string   month_group        = 4;
+  int32    left_days          = 5;
+  string   product_name       = 6;
+  repeated string instruments = 7;
+}
+
+// 期权组列表
+message OptionMonthGroupList {
+  string   exchange              = 1;
+  string   product               = 2;
+  repeated OptionMonthGroup list = 3;
+}
+
+// 合约组
+enum SymbolGroupType {
+  CTP_FUTURE_ALL      = 0;
+  CTP_FUTURE_FUTURE   = 1;
+  CTP_FUTURE_OPTION   = 2;
+  CTP_FUTURE_COMBINE  = 3;
+  CTP_SOPT_ALL        = 4;
+  CTP_SOPT_ETF_OPTION = 5;
+  CTP_SOPT_SSE_STOCK  = 6;
+  CTP_SOPT_SZE_STOCK  = 7;
+}
+
+// 合约
+message UniqueSymbol {
+  string exchange = 1;
+  string symbol   = 2;
+}

@@ -2,7 +2,6 @@ syntax = "proto3";
 package goshare;
 option go_package = "github.com/mineralres/protos/src/go/goshare";
 
-
 enum PeriodType {
   TICK = 0;  // Tick
   M1   = 1;  // 分钟
@@ -22,12 +21,6 @@ enum PriceAdjustType {
   NORMAL = 0; // 不复权
   BEFORE = 1; // 前复权
   AFTER  = 2; // 后复权
-}
-
-// OptionCallPutType 期权call or put 类型
-enum OptionCallPutType {
-  OCPT_CALL = 0;
-  OCPT_PUT  = 1;
 }
 
 // 行权日类型
@@ -273,4 +266,11 @@ message CommonResponse {
   bool   success = 1;
   int32  code    = 2;
   string message = 3;
+}
+
+enum BrokerType {
+  CTP_FUTURE = 0;
+  CTP_SOPT   = 1;
+  LTS_STOCK  = 2;
+  CAT_STOCK  = 3;
 }

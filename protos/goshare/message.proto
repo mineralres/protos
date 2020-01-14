@@ -1,13 +1,13 @@
 syntax = "proto3";
 package goshare;
-option go_package = "github.com/mineralres/protos/src/go/goshare";
 
+option go_package = "github.com/mineralres/protos/src/go/goshare";
 
 // Message 消息
 message Message {
-  MessageType type = 1;
-  string target = 2;
-  bytes data = 3;
+  MessageType type   = 1;
+  string      target = 2;
+  bytes       data   = 3;
 }
 
 // MessageList 消息list
@@ -28,10 +28,12 @@ enum MessageType {
   HEATBEAT = 5;
   // 上传tick
   UPLOAD_TICK = 6;
+  // 策略委托
+  SOPT_STRATEGY_ORDER = 7;
 }
 
 message StreamMessage {
-  MessageType type = 1;
-  string target = 2;
-  string data = 3;
+  MessageType type   = 1;
+  string      target = 2;
+  string      data   = 3;
 }
