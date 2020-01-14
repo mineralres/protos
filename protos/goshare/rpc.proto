@@ -1,0 +1,187 @@
+syntax = "proto3";
+package goshare;
+
+import "goshare/common.proto";
+import "goshare/market_data.proto";
+import "goshare/instrument.proto";
+import "spider/sse.proto";
+import "spider/xueqiu.proto";
+
+option go_package = "github.com/mineralres/protos/src/go/goshare";
+
+
+// 批量获取
+message ReqGetInstrumentList { string exchange = 1; }
+message RspGetInstrumentList { repeated Instrument list = 1; }
+
+// 保存合约
+message ReqSaveInstrument { Instrument instrument = 1; }
+message RspSaveInstrument {}
+// 读取合约
+message ReqGetInstrument {
+  string exchange = 1;
+  string symbol   = 2;
+}
+message RspGetInstrument { Instrument instrument = 1; }
+
+message ReqSubscribe {
+  string   exchange           = 1;
+  string   symbol             = 2;
+  repeated string list        = 3;
+  bool            binary_data = 4;
+}
+message RspSubscribe {}
+message ReqUnSubscribe {
+  string   exchange    = 1;
+  repeated string list = 2;
+}
+message RspUnSubscribe {}
+
+message ReqCombineSubscribe {
+  string   exchange               = 1;
+  string   symbol                 = 2;
+  repeated PeriodType period_list = 3;
+}
+message RspCombineSubscribe {
+  string   exchange            = 1; // 交易所
+  string   symbol              = 2; // 合约
+  repeated KlineSeries history = 3; // 历史
+  MarketDataSnapshot   tick    = 4; // 行情
+  repeated Kline klines        = 5;
+}
+
+message ReqGetTickSeries {
+  string exchange = 1;
+  string symbol   = 2;
+  int32  start    = 3;
+  int32  end      = 4;
+}
+
+message RspGetTickSeries {
+  string   exchange                = 1;
+  string   symbol                  = 2;
+  int32    start                   = 3;
+  int32    end                     = 4;
+  repeated MarketDataSnapshot list = 5;
+}
+
+message ReqSaveKlineSeries {
+  string          exchange = 1;
+  string          symbol   = 2;
+  PeriodType      period   = 3;
+  PriceAdjustType adjust   = 4;
+  repeated Kline list      = 5;
+}
+message RspSaveKlineSeries {}
+
+message ReqGetKlineSeries {
+  string          exchange = 1;
+  string          symbol   = 2;
+  PeriodType      period   = 3;
+  PriceAdjustType adjust   = 4;
+  int64           start    = 5;
+  int32           count    = 6;
+}
+
+message RspGetKlineSeries {
+  string          exchange = 1;
+  string          symbol   = 2;
+  PeriodType      period   = 3;
+  PriceAdjustType adjust   = 4;
+  repeated Kline list      = 5;
+}
+
+message ReqSSEStockOptionList {}
+message RspSSEStockOptionList { repeated spider.SSEStockOption list = 1; }
+
+message ReqSaveBonusHistory {
+  string   exchange          = 1;
+  string   symbol            = 2;
+  repeated spider.Bonus list = 3;
+}
+message RspSaveBonusHistory {}
+
+message ReqGetBonusHistory {
+  string exchange = 1;
+  string symbol   = 2;
+}
+message RspGetBonusHistory {
+  string   exchange          = 1;
+  string   symbol            = 2;
+  repeated spider.Bonus list = 3;
+}
+
+message ReqBatchDelete { repeated bytes keys = 1; }
+message RspBatchDelete {}
+
+message ReqBatchGet { repeated bytes keys = 1; }
+message RspBatchGet { repeated bytes values = 1; }
+
+message ReqBatchPut {
+  repeated bytes keys   = 1;
+  repeated bytes values = 2;
+}
+message RspBatchPut {}
+
+message ReqDelete { bytes key = 1; }
+message RspDelete {}
+
+message ReqGet { bytes key = 1; }
+message RspGet {
+  bytes value     = 1;
+  bool  not_found = 2;
+}
+
+message ReqPut {
+  bytes key   = 1;
+  bytes value = 2;
+}
+message RspPut {}
+
+message ReqReverseScan {
+  bytes start = 1;
+  bytes end   = 2;
+  int32 limit = 3;
+}
+message RspReverseScan { repeated bytes values = 1; }
+
+message ReqScan {
+  bytes start = 1;
+  bytes end   = 2;
+  int32 limit = 3;
+}
+message RspScan { repeated bytes values = 1; }
+
+// K线缓存
+service KlineCache {
+  // 保存K线
+  rpc SaveKlineSeries(ReqSaveKlineSeries) returns (RspSaveKlineSeries) {}
+  // 读取K线
+  rpc GetKlineSeries(ReqGetKlineSeries) returns (RspGetKlineSeries) {}
+  // 保存合约
+  rpc SaveInstrument(ReqSaveInstrument) returns (RspSaveInstrument) {}
+  // 读取合约
+  rpc GetInstrument(ReqGetInstrument) returns (RspGetInstrument) {}
+  // 批量读取
+  rpc GetInstrumentList(ReqGetInstrumentList) returns (RspGetInstrumentList) {}
+  // 保存分红历史
+  rpc SaveBonusHistory(ReqSaveBonusHistory) returns (RspSaveBonusHistory) {}
+  // 读取分红历史
+  rpc GetBonusHistory(ReqGetBonusHistory) returns (RspGetBonusHistory) {}
+  // 批量删除
+  rpc BatchDelete(ReqBatchDelete) returns (RspBatchDelete) {}
+  // 批量获取
+  rpc BatchGet(ReqBatchGet) returns (RspBatchGet) {}
+  // 批量保存
+  rpc BatchPut(ReqBatchPut) returns (RspBatchPut) {}
+  // 删除
+  rpc Delete(ReqDelete) returns (RspDelete) {}
+  // 取得
+  rpc Get(ReqGet) returns (RspGet) {}
+  // 保存
+  rpc Put(ReqPut) returns (RspPut) {}
+  // 反向扫描
+  rpc ReverseScan(ReqReverseScan) returns (RspReverseScan) {}
+  // 扫描
+  rpc Scan(ReqScan) returns (RspScan) {}
+}

@@ -1,0 +1,10 @@
+rm ../src/cpp/*.h
+rm ../src/cpp/*.cc
+
+./protoc -I=../protos --cpp_out="../src/cpp" ../protos/goshare/*.proto
+./protoc -I=../protos --cpp_out="../src/cpp" ../protos/spider/*.proto
+./protoc -I=../protos --cpp_out="../src/cpp" ../protos/tadb/*.proto
+./protoc -I=../protos --cpp_out="../src/cpp" ../protos/google/protobuf/*.proto
+
+#./protoc -I=../protos --grpc_out="../src/cpp" --plugin=protoc-gen-grpc=grpc_cpp_plugin.exe ../protos/rpc/market_data_service.proto
+#./protoc -I=../protos --cpp_out="../src/cpp" ../protos/rpc/market_data_service.proto

@@ -1,0 +1,11 @@
+rm ../src/go/goshare/*.go
+./protoc -I=../protos --go_out=../../../.. ../protos/goshare/*.proto
+
+rm ../src/go/hub/*.go
+./protoc -I=../protos --go_out=../../../.. ../protos/hub/*.proto
+
+rm ../src/go/demo/*.go
+./protoc -I=../protos --go_out=../../../.. ../protos/demo/*.proto
+
+rm ../src/go/ctp/*.go
+./protoc -I=../protos --go_out=../../../.. ../protos/ctp/*.proto

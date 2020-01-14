@@ -1,0 +1,60 @@
+syntax = "proto3";
+package goshare;
+
+option go_package = "github.com/mineralres/protos/src/go/goshare";
+
+
+
+enum PositionSummationType {
+  TOTAL     = 0;
+  TODAY     = 1;
+  YESTERDAY = 2;
+}
+
+// 持仓统计
+message PositionSummation {
+  // 方向
+  int32 direction = 1;
+  // 类型
+  int32 type = 2;
+  // 持仓
+  int32 position = 3;
+  // 成本
+  double cost = 4;
+  // 金额
+  double amount = 5;
+  // 冻结
+  int32 frozen = 6;
+  // 可用
+  int32 available = 7;
+  // 盈亏
+  double float_profit = 9;
+  // 保证金
+  double margin = 11;
+}
+
+// 持仓
+message Position {
+  string            user_id                = 1;  // 用户
+  string            ta_id                  = 2;  // 账号
+  string            bu_id                  = 3;  // bu
+  string            exchange               = 4;  // 交易所
+  string            symbol                 = 5;  /// 合约编号
+  string            product                = 6;  // 品种
+  int32             direction              = 7;  // 方向
+  PositionSummation total                  = 8;  // 统计
+  PositionSummation today                  = 9;  // 今仓
+  PositionSummation yesterday              = 10; // 今仓
+  double            pre_settlement_price   = 11; // 昨结算
+  double            settlement_price       = 12; // 今结算
+  double            last_price             = 13; // 最新价
+  int32             trading_day            = 14; // 交易日
+  int32             product_type           = 15; // 交易品种类型
+  int32             multiple               = 16; // 合约乘数
+  double            price_tick             = 17; // 最小变动价位
+  string            symbol_name            = 18; // 名称
+  string            user_name              = 19; // 账号名
+  string            branch                 = 20; // 部门
+  string            branch_name            = 21; // 部门名称
+  bool              is_close_today_allowed = 22; // 是否允许平今
+}
